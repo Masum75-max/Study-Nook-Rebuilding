@@ -33,7 +33,7 @@ export default function EditRoomForm({ roomId }) {
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/allrooms/${roomId}`);
         const data = await res.json();
-
+        
         if (data) {
           setFormData({
             id: data.id || "",
@@ -98,12 +98,14 @@ export default function EditRoomForm({ roomId }) {
         ? formData.amenities.split(",").map((item) => item.trim()).filter(Boolean)
         : formData.amenities,
     };
+    const {data: tokenData}= await authClient.token()
 
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/allrooms/${roomId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
+           authorization:`Bearer ${tokenData?.token}`
         },
         body: JSON.stringify(updatedRoom),
       });

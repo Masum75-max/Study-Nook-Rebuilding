@@ -22,15 +22,20 @@ export default function DeleteRoomModal({ roomId }) {
     const creatorId = room.creatorId
 
     console.log("Creator id",creatorId)
-
+  
+    
 
     if(creatorId !== userId){
       redirect('/unauthorized')
     }
     setLoading(true);
     try {
+      const {data:tokenData} = await authClient.token();
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/allrooms/${roomId}`, {
         method: "DELETE",
+         headers:{
+          authorization:`Bearer ${tokenData?.token}`
+         }
       });
 
       const data = await res.json();
