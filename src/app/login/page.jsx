@@ -3,38 +3,39 @@ import Link from 'next/link';
 import React from 'react';
 import { authClient } from '@/lib/auth-client';
 import { ToastContainer, toast } from 'react-toastify';
-import { useRouter } from 'next/navigation';
 
 export default function LoginCard() {
-    const router = useRouter()
-    const loginFunc = async(e)=>{
-        e.preventDefault()
+    // router er r dorkar nai jodi window.location.href use kori
+
+    const loginFunc = async(e) => {
+        e.preventDefault();
       
-        const email =  e.target.email.value
-        const password = e.target.password.value
+        const email = e.target.email.value;
+        const password = e.target.password.value;
 
+        const { data, error } = await authClient.signIn.email({
+            email: email,
+            password: password,
+        });
 
-           const { data, error } = await authClient.signIn.email({
-             // required
-              email: email, // required
-              password: password, // required
-            
-              
-            });
+        if(error){
+            toast.warning("Invalid email or password !");
+            return;
+        }
 
-            if(error){
-                toast.warning("Invalid email or password !")
-            }
+        if(data){
+            toast.success("Now you are logged in!");
 
-            if(data){
-                toast.success("Now you are logged in")
-                router.push('/')
-               
-            }
+            // 💡 1 second delay sequence: Toast dekhabe + Cookie perfectly set hobe
+            setTimeout(() => {
+                window.location.href = '/'; // Hard reload so Next.js server gets updated session cookie
+            }, 1000);
+        }
     }
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
-        <ToastContainer></ToastContainer>
+        <ToastContainer />
       <div className="w-full max-w-md space-y-8 rounded-2xl bg-white p-8 shadow-xl border border-gray-100">
         
         {/* Header */}
@@ -47,8 +48,8 @@ export default function LoginCard() {
           </p>
         </div>
 
-        {/* Form */}
-        <form onSubmit={loginFunc} className="mt-8 space-y-6" action="#" method="POST">
+        {/* Form (action="#" method="POST" gulo soriye fela hoyeche) */}
+        <form onSubmit={loginFunc} className="mt-8 space-y-6">
           <div className="space-y-4 rounded-md">
             
             {/* Email Input */}
