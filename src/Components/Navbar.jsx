@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Button } from '@heroui/react';
 import { authClient } from '@/lib/auth-client';
 import { BookOpenText, Menu, X, User } from 'lucide-react';
+import { redirect } from 'next/navigation';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -170,7 +171,10 @@ const Navbar = () => {
                                     className="w-full font-semibold rounded-xl bg-red-600"
                                     onClick={() => {
                                         authClient.signOut();
+
+                    
                                         setIsOpen(false);
+                                        redirect('/')
                                     }}
                                 >
                                     Log Out
