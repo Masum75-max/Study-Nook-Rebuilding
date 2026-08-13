@@ -1,7 +1,7 @@
 'use client'
 import { authClient } from '@/lib/auth-client';
 import { ToastContainer, toast } from 'react-toastify';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import {
   Button,
   Checkbox,
@@ -14,6 +14,7 @@ import {
 } from '@heroui/react';
 import React from 'react';
 import Link from 'next/link';
+import { signOut } from 'better-auth/api';
 
 
 const SignUpPage = () => {
@@ -49,9 +50,11 @@ const router = useRouter()
 
      if(data){
 
-        toast.success("Account created successfully!");
-
-        router.push('/')
+        
+        authClient.signOut()
+        toast.success("Sign up Successful.Please SinIn");
+        redirect('/login')
+        
         
      }
   };

@@ -1,11 +1,19 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { redirect, useRouter } from "next/navigation";
 import { ToastContainer, toast } from 'react-toastify';
 
+export default function EditRoomForm({ roomId }) {
+  const router = useRouter();
+  const session = authClient.useSession();
+  const userId = session?.data?.user?.id;
 
-export default function RoomForm() {
+
+  const [fetching, setFetching] = useState(true); // ডাটা লোড হওয়ার স্টেট
+  const [loading, setLoading] = useState(false);  // ফর্ম সাবমিটের সময় লোডিং স্টেট
+
   const [formData, setFormData] = useState({
     id: "",
     name: "",
@@ -17,15 +25,42 @@ export default function RoomForm() {
     amenities: "",
   });
 
-  const session = authClient.useSession()
-  
-  const id = session?.data?.user?.id
+  // ১. কম্পোনেন্ট মাউন্ট হলেই roomId দিয়ে ডাটা ফেচ করা হবে
+  useEffect(() => {
+    if (!roomId) return;
 
-  // 
+    const fetchRoomData = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/allrooms/${roomId}`);
+        const data = await res.json();
 
-  const [loading, setLoading] = useState(false);
+        if (data) {
+          setFormData({
+            id: data.id || "",
+            name: data.name || "",
+            image: data.image || "",
+            description: data.description || "",
+            floor: data.floor || "",
+            capacity: data.capacity || "",
+            hourlyRate: data.hourlyRate || "",
+            // amenities অ্যারে থাকলে কমা দিয়ে স্ট্রিং করা হচ্ছে
+            amenities: Array.isArray(data.amenities)
+              ? data.amenities.join(", ")
+              : data.amenities || "",
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching room details:", error);
+        toast.error("Failed to load room details!");
+      } finally {
+        setFetching(false);
+      }
+    };
 
-  // Input Change
+    fetchRoomData();
+  }, [roomId]);
+
+  // Input Change Handler
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
@@ -33,71 +68,81 @@ export default function RoomForm() {
     }));
   };
 
-  // Form Submit
+  // Form Submit Handler (PATCH)
   const handleSubmit = async (e) => {
+     
     e.preventDefault();
-
     setLoading(true);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/allrooms/${roomId}`)
 
-    const newRoom = {
+    const room = await res.json()
+
+    const creatorId = room.creatorId
+
+    console.log("Creator id",creatorId)
+
+    if(creatorId !== userId){
+      redirect('/unauthorized')
+    }
+
+    const updatedRoom = {
       id: formData.id,
-      creatorId:id,
+      creatorId: userId,
       name: formData.name,
       image: formData.image,
       description: formData.description,
       floor: formData.floor,
       capacity: formData.capacity,
       hourlyRate: formData.hourlyRate,
-      amenities: formData.amenities
-        .split(",")
-        .map((item) => item.trim())
-        .filter(Boolean),
+      amenities: typeof formData.amenities === "string"
+        ? formData.amenities.split(",").map((item) => item.trim()).filter(Boolean)
+        : formData.amenities,
     };
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/allrooms`, {
-        method: "POST",
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/allrooms/${roomId}`, {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newRoom),
+        body: JSON.stringify(updatedRoom),
       });
 
       const data = await res.json();
 
-      if (data.insertedId) {
-        toast.success("✅ Room added successfully!");
-
-        setFormData({
-          id: "",
-          name: "",
-          image: "",
-          description: "",
-          floor: "",
-          capacity: "",
-          hourlyRate: "",
-          amenities: "",
-        });
+      if (data.modifiedCount > 0 || data.acknowledged) {
+        toast.success("✅ Room updated successfully!");
+        router.push("/rooms"); // আপডেট শেষে লিস্ট পেজে রিডাইরেক্ট
+        router.refresh();
       } else {
-        toast.error("❌ Failed to add room. Please try again.");
+        toast.error("⚠️ No changes were made or update failed.");
       }
     } catch (error) {
       console.error(error);
-      alert("Server Error!");
+      toast.error("Server Error!");
     } finally {
       setLoading(false);
     }
   };
 
+  // ডাটা ফেচ হওয়া পর্যন্ত লোডার দেখানো হবে
+  if (fetching) {
+    return (
+      <div className="text-center py-20 font-medium text-gray-600">
+        Loading room details...
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-4xl mx-auto p-6">
-        <ToastContainer />
+      <ToastContainer />
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-xl rounded-xl p-6 space-y-5"
       >
         <h2 className="text-3xl font-bold text-center mb-4">
-          Add New Meeting Room
+          Edit Meeting Room
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -183,7 +228,7 @@ export default function RoomForm() {
           disabled={loading}
           className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition disabled:opacity-60"
         >
-          {loading ? "Submitting..." : "Add Room"}
+          {loading ? "Updating..." : "Update Room"}
         </button>
       </form>
     </div>
