@@ -16,22 +16,22 @@ export default function RoomCard({ room }) {
     ? `${description.substring(0, 100)}...` 
     : description;
 
-  // ডিফল্ট ইমেজ ব্যাকআপ যদি কোনো অবজেক্টে ইমেজ না থাকে
+  
   const defaultImage = 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=600&q=80';
 
   return (
     <div className="flex flex-col bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 group">
       
       {/* 1. Room Image Container */}
-      {/* Next.js-এ object-fit: cover ব্যবহার করতে প্যারেন্ট ডিভে relative ক্লাস এবং ইমেজে fill প্রপ ব্যবহার করা সবচেয়ে বেস্ট প্র্যাকটিস */}
+     
       <div className="relative h-52 w-full overflow-hidden bg-gray-100">
         <Image
           src={image || defaultImage}
           alt={name}
-          fill // পুরো কন্টেইনার জুড়ে ইমেজ ছড়ানোর জন্য
+          fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover group-hover:scale-105 transition-transform duration-500"
-          priority={false} // ইমেজ অলসভাবে (lazy) লোড হবে
+          priority={false} 
         />
         
         {/* Hourly Rate Floating Badge */}

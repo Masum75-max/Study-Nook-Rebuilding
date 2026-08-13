@@ -6,6 +6,7 @@ import RoomCard from '@/Components/RoomCard';
 import Link from 'next/link';
 import { Button } from '@heroui/react';
 import { ArrowRight, DoorOpen } from 'lucide-react';
+import MyBookingsRoomCard from '../../Components/MyBookingsRoomCard'
 
 export const metadata = {
   title: 'My Bookings'
@@ -82,7 +83,7 @@ const MyBookingsPage = async() => {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4 max-w-7xl mx-auto">
           {myRooms.map((room) => (
-            <RoomCard key={room._id || room.id} room={room} />
+            <MyBookingsRoomCard key={room._id || room.id} room={room} />
           ))}
         </div>
         

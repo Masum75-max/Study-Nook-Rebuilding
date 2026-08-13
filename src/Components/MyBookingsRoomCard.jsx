@@ -88,7 +88,7 @@ export default function RoomCard({ room }) {
          
         
         <Link 
-  href={`/rooms/${room._id}`} 
+  href={`/mybookings/${room._id}`} 
   className="flex items-center justify-center w-full mt-auto bg-gray-900 hover:bg-blue-600 text-white font-medium text-sm py-3 rounded-xl transition-all duration-300 shadow-sm active:scale-[0.98] text-center"
 >
   View Details

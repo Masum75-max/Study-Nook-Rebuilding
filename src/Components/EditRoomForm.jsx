@@ -112,7 +112,7 @@ export default function EditRoomForm({ roomId }) {
 
       if (data.modifiedCount > 0 || data.acknowledged) {
         toast.success("✅ Room updated successfully!");
-        router.push("/rooms"); // আপডেট শেষে লিস্ট পেজে রিডাইরেক্ট
+        router.push("/rooms"); 
         router.refresh();
       } else {
         toast.error("⚠️ No changes were made or update failed.");
@@ -125,7 +125,7 @@ export default function EditRoomForm({ roomId }) {
     }
   };
 
-  // ডাটা ফেচ হওয়া পর্যন্ত লোডার দেখানো হবে
+ 
   if (fetching) {
     return (
       <div className="text-center py-20 font-medium text-gray-600">

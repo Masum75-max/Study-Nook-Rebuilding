@@ -6,7 +6,7 @@ import { FiTrash2 } from "react-icons/fi";
 import { toast } from "react-toastify";
 import { authClient } from "@/lib/auth-client";
 
-export default function DeleteRoomModal({ roomId }) {
+export default function CancelRoomModal({ roomId }) {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -24,12 +24,10 @@ export default function DeleteRoomModal({ roomId }) {
     console.log("Creator id",creatorId)
 
 
-    if(creatorId !== userId){
-      redirect('/unauthorized')
-    }
+   
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/allrooms/${roomId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/bookings/${roomId}`, {
         method: "DELETE",
       });
 
@@ -68,10 +66,10 @@ export default function DeleteRoomModal({ roomId }) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-gray-100 animate-in fade-in zoom-in duration-150">
             <h3 className="text-lg font-bold text-gray-900 mb-2">
-              Are you sure you want to delete this room?
+              Are you sure you want to Cancel this room?
             </h3>
             <p className="text-sm text-gray-500 mb-6">
-              This action cannot be undone. This room will be permanently removed from the database.
+              This action cannot be undone. This room will be permanently removed from your bookings
             </p>
 
             <div className="flex items-center justify-end gap-3">

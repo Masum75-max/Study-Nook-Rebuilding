@@ -17,7 +17,7 @@ const Navbar = () => {
         <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 px-4 md:px-8">
             <div className="max-w-7xl mx-auto flex items-center justify-between h-20">
                 
-                {/* ১. লোগো এবং মোবাইল মেনু বাটন */}
+             
                 <div className="flex items-center gap-4">
                     <button 
                         onClick={() => setIsOpen(!isOpen)}
@@ -37,7 +37,7 @@ const Navbar = () => {
                     </Link>
                 </div>
 
-                {/* ২. ডেসটপ নেভিগেশন লিংকসমূহ */}
+                
                 <div className="hidden md:flex items-center gap-6 font-semibold text-gray-700 text-sm">
                     <Link href="/" className="hover:text-blue-600 transition">Home</Link>
                     <Link href="/rooms" className="hover:text-blue-600 transition">Rooms</Link>
@@ -50,11 +50,11 @@ const Navbar = () => {
                     )}
                 </div>
 
-                {/* ৩. ইউজার প্রোফাইল ও বাটন (Flex & Next Image) */}
+              
                 <div className="hidden md:flex items-center gap-3">
                     {user ? (
                         <div className="flex items-center gap-3">
-                            {/* ইউজারের প্রোফাইল কার্ড */}
+                           
                             <div className="flex items-center gap-2.5 bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-full shadow-2xs">
                                 <div className="relative w-8 h-8 rounded-full overflow-hidden bg-gray-200 shrink-0 border border-gray-300">
                                     {user?.image ? (
@@ -74,7 +74,7 @@ const Navbar = () => {
                                 </span>
                             </div>
                             
-                            {/* লগআউট বাটন */}
+                          
                             <Button 
                                 color="danger" 
                                 variant="flat"
@@ -103,7 +103,7 @@ const Navbar = () => {
 
             </div>
 
-            {/* ৪. মোবাইল ড্রপডাউন মেনু */}
+          
             {isOpen && (
                 <div className="md:hidden py-4 border-t border-gray-100 flex flex-col gap-3 bg-white">
                     <Link 

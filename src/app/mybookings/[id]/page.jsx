@@ -8,6 +8,8 @@ import { HiOutlineLocationMarker, HiOutlineUsers, HiOutlineSparkles } from 'reac
 import { BiDollarCircle, BiChevronLeft } from 'react-icons/bi';
 import { FiEdit } from 'react-icons/fi';
 import DeleteRoomModal from '../../../Components/DeleteRoomModal'; 
+import CancelRoomModal from '@/Components/CancelRoomModal';
+
 
 const Detailspage = async ({ params }) => {
   const { id } = await params;
@@ -109,16 +111,10 @@ const Detailspage = async ({ params }) => {
            
             <div className="mt-6 lg:mt-auto pt-4 border-t border-gray-100 flex items-center gap-3">
               {/* Edit Button */}
-              <Link 
-                href={`/mylistings/${_id || id}/edit`}
-                className="flex-1 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl shadow-md shadow-blue-500/20 transition-all text-sm"
-              >
-                <FiEdit className="text-lg" />
-                <span>Edit Room</span>
-              </Link>
+             
 
              
-              <DeleteRoomModal roomId={_id || id} />
+              <CancelRoomModal roomId={_id || id} />
             </div>
 
           </div>
